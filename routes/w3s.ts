@@ -36,8 +36,6 @@ export default defineEventHandler(async (event) => {
 
   const files = await filesFromPaths([filePath])
 
-  console.log(files[0])
-
   const cid = await client.uploadFile(files[0])
 
   console.log(`https://${cid?.toString()}.ipfs.w3s.link`)
