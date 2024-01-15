@@ -1,0 +1,24 @@
+{
+  "private": true,
+  "scripts": {
+    "prepare": "nitropack prepare",
+    "dev": "nitropack dev",
+    "build": "nitropack build",
+    "preview": "node .output/server/index.mjs",
+    "lint": "biome check . --apply",
+    "format": "biome format . --write"
+  },
+  "dependencies": {
+    "@ipld/car": "^5.2.6",
+    "@ucanto/core": "^9.0.1",
+    "@ucanto/principal": "^9.0.0",
+    "@web3-storage/access": "^18.1.0",
+    "@web3-storage/w3up-client": "^12.0.0",
+    "files-from-path": "^1.0.4",
+    "formidable": "^3.5.1",
+    "nitropack": "latest"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.5.2"
+  }
+}
