@@ -8,7 +8,7 @@ import { filesFromPaths } from 'files-from-path'
 
 let client: Client
 
-(async () => {
+;(async () => {
   const principal = parse(process.env.KEY)
   client = await create({ principal, store: new StoreMemory() })
   const proof = await parseProof(process.env.PROOF)
@@ -35,6 +35,8 @@ export default defineEventHandler(async (event) => {
   const filePath = body.file[0].filepath
 
   const files = await filesFromPaths([filePath])
+
+  console.log(files[0])
 
   const cid = await client.uploadFile(files[0])
 
