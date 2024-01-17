@@ -7,6 +7,8 @@ export default defineEventHandler(async (event) => {
 
   const assetEndpointForMux = `https://${cid}.ipfs.w3s.link`
 
+  try{
+
   const asset = await Video.Assets.create({
     input: assetEndpointForMux,
     playback_policy: 'public',
@@ -14,6 +16,10 @@ export default defineEventHandler(async (event) => {
   })
 
   return { id: asset.id, playbackId: asset.playback_ids?.[0].id }
+} catch(e) {
+  console.error('Error creating Mux asset', e)
+  return { error: 'Error creating Mux asset' }
+}
 })
 
 // const directUpload = await Video.Uploads.create({
