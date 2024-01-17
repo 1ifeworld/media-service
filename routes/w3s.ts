@@ -7,7 +7,6 @@ import { formidable } from 'formidable'
 import { filesFromPaths } from 'files-from-path'
 
 let client: Client
-
 ;(async () => {
   const principal = parse(process.env.KEY)
   client = await create({ principal, store: new StoreMemory() })

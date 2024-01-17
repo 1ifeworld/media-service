@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ipld/car": "^5.2.6",
+    "@mux/mux-node": "^7.3.5",
     "@ucanto/core": "^9.0.1",
     "@ucanto/principal": "^9.0.0",
     "@web3-storage/access": "^18.1.0",
