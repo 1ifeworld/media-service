@@ -8,7 +8,6 @@ export default defineEventHandler(async (event) => {
   const assetEndpointForMux = `https://${cid}.ipfs.w3s.link`
 
   try{
-
   const asset = await Video.Assets.create({
     input: assetEndpointForMux,
     playback_policy: 'public',

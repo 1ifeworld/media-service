@@ -3,9 +3,9 @@ import Mux from '@mux/mux-node'
 const { Video } = new Mux()
 
 export default defineEventHandler(async (event) => {
-  const uploadId = await readBody(event)
+  const assetId = await readBody(event)
   try {
-    const status = await Video.Assets.get(uploadId)
+    const status = await Video.Assets.get(assetId.assetId)
 
     return { status: status.status, error: status.errors }
   } catch (e) {
