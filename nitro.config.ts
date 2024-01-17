@@ -8,5 +8,12 @@ export default defineNitroConfig({
         'access-control-allow-origin': '*',
       },
     },
+    '/mux': {
+      cors: true,
+      headers: {
+        'access-control-allow-methods': 'POST',
+        'access-control-allow-origin': '*',
+      },
+    },
   },
 })
