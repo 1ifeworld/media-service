@@ -7,7 +7,8 @@ import { formidable } from 'formidable'
 import { filesFromPaths } from 'files-from-path'
 
 let client: Client
-;(async () => {
+
+(async () => {
   const principal = parse(process.env.KEY)
   client = await create({ principal, store: new StoreMemory() })
   const proof = await parseProof(process.env.PROOF)

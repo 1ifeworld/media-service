@@ -21,6 +21,7 @@ export default defineEventHandler(async (event) => {
   }
 })
 
+
 // const directUpload = await Video.Uploads.create({
 //   cors_origin: '*',
 //   new_asset_settings: {
