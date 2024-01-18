@@ -1,9 +1,11 @@
 import Mux from '@mux/mux-node'
-
 const { Video } = new Mux()
+
+// check if get function from front end is sending authToken
 
 export default defineEventHandler(async (event) => {
   const assetId = await readBody(event)
+
   try {
     const status = await Video.Assets.get(assetId.assetId)
 
