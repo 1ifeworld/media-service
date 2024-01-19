@@ -12,10 +12,4 @@ export default defineNitroConfig({
       },
     },
   },
-  storage: {
-    redis: {
-      driver: 'redis',
-      url: process.env.REDIS_URL,
-    },
-  },
 })

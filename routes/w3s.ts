@@ -28,13 +28,11 @@ async function parseProof(data) {
 export default defineEventHandler(async (event) => {
   const requestObject = event.node.req
 
-  const storage = useStorage('redis')
-
   // Extract and validate the authToken
   let authToken = requestObject.headers['authorization']
 
   if (Array.isArray(authToken)) {
-    authToken = authToken[0] 
+    authToken = authToken[0]
   }
 
   authToken = authToken?.split(' ')[1]
@@ -42,30 +40,10 @@ export default defineEventHandler(async (event) => {
     return { error: 'No authentication token provided' }
   }
 
-  let inStorage = await storage.hasItem(authToken)
-  let tokenData
-
-  if (!inStorage) {
-    const authorized = await checkPrivy(authToken)
-    if (
-      !authorized ||
-      authorized.appId !== process.env.PRIVY_APP_ID ||
-      Date.now() > authorized.expiration
-    ) {
-      // Re-validate the token
-      const revalidatedToken = await checkPrivy(authToken)
-      if (!revalidatedToken) {
-        return { error: 'Token revalidation failed' }
-      }
-      tokenData = revalidatedToken
-    }
-    await storage.setItem(authToken, {
-      userId: authorized.privyUserId,
-      expiry: authorized.expiration,
-      appId: authorized.appId,
-      issuedAt: authorized.issuedAt,
-    })
-    tokenData = authorized
+  const verifiedClaims = await checkPrivy(authToken)
+  if (!verifiedClaims || verifiedClaims.appId !== process.env.PRIVY_APP_ID) {
+    console.error('Invalid authentication token')
+    return { error: 'Invalid authentication token' }
   }
 
   const body = await watchData(requestObject)

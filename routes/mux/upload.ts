@@ -38,23 +38,12 @@ export default defineEventHandler(async (event) => {
   if (!authToken) {
     return { error: 'No authentication token provided' }
   }
-
-  const storage = useStorage('redis')
   const cid = await readBody(event)
 
-  let tokenData = await storage.getItem(authToken)
-  if (!tokenData) {
-    const verifiedClaims = await checkPrivy(authToken)
-    if (!verifiedClaims || verifiedClaims.appId !== process.env.PRIVY_APP_ID) {
-      console.error('Invalid authentication token')
-      return { error: 'Invalid authentication token' }
-    }
-
-    await storage.setItem(authToken, {
-      userId: verifiedClaims.privyUserId,
-      expiry: verifiedClaims.expiration,
-    })
-    tokenData = verifiedClaims
+  const verifiedClaims = await checkPrivy(authToken)
+  if (!verifiedClaims || verifiedClaims.appId !== process.env.PRIVY_APP_ID) {
+    console.error('Invalid authentication token')
+    return { error: 'Invalid authentication token' }
   }
 
   const assetEndpointForMux = `https://${cid}.ipfs.w3s.link`
