@@ -32,6 +32,9 @@ dependencies:
   formidable:
     specifier: ^3.5.1
     version: 3.5.1
+  nitro-cors:
+    specifier: ^0.7.0
+    version: 0.7.0
   nitropack:
     specifier: latest
     version: 2.8.1
@@ -2695,6 +2698,13 @@ packages:
       node-fetch: '*'
     dependencies:
       node-fetch: 2.7.0
+    dev: false
+
+  /nitro-cors@0.7.0:
+    resolution: {integrity: sha512-Mbb26M7TCKZxt8mOw5V9mVj4gCCv+/+LOy1QUUlk+HcMFn5CD4/irwg8IsoDg7NA+c441A0joC4n+mVFCNhu5g==}
+    dependencies:
+      h3: 1.10.0
+      ufo: 1.3.2
     dev: false
 
   /nitropack@2.8.1:

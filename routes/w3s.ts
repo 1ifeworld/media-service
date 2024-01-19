@@ -5,10 +5,9 @@ import { StoreMemory } from '@web3-storage/access'
 import { create, type Client } from '@web3-storage/w3up-client'
 import { formidable } from 'formidable'
 import { filesFromPaths } from 'files-from-path'
-import { checkPrivy } from '../utils/authDb'
 
 let client: Client
-(async () => {
+;(async () => {
   const principal = parse(process.env.KEY)
   client = await create({ principal, store: new StoreMemory() })
   const proof = await parseProof(process.env.PROOF)
@@ -31,12 +30,8 @@ export default defineEventHandler(async (event) => {
 
   const storage = useStorage('redis')
 
-  // console.log("REQUESTOBJECT", requestObject)
-  // console.log("Headers:", requestObject.headers)
-
   // Extract and validate the authToken
   let authToken = requestObject.headers['authorization']
-  // console.log("AUTHTOKEN PRE", authToken)
 
   if (Array.isArray(authToken)) {
     authToken = authToken[0] // Take the first token if there are multiple
@@ -47,23 +42,27 @@ export default defineEventHandler(async (event) => {
     return { error: 'No authentication token provided' }
   }
 
-  console.log("AUTHTOKEN POST", authToken)
-
-  let tokenData = await storage.getItem(authToken)
-  console.log("tokenData pre", tokenData)
+  let inStorage = await storage.hasItem(authToken)
+  let tokenData
 
   // this logic could be better. we should check if its expired, if so revalidate etc.
-  
-  if (!tokenData) {
-    const authorized = await checkPrivy(authToken)
-    if (!authorized || authorized.appId !== process.env.PRIVY_APP_ID) {
-      return { error: 'Invalid or unauthorized authentication token' }
+  if (!inStorage) {
+    const authorized = await checkPrivy(authToken);
+    if (!authorized || authorized.appId !== process.env.PRIVY_APP_ID || Date.now() > authorized.expiration) {
+      // Re-validate the token
+      const revalidatedToken = await checkPrivy(authToken);
+      if (!revalidatedToken) {
+        return { error: 'Token revalidation failed' };
+      }
+      tokenData = revalidatedToken;
     }
-    // Store the verified token in Redis
-    await storage.setItem(authToken, { userId: authorized.privyUserId, expiry: authorized.expiration })
+    await storage.setItem(authToken, {
+      userId: authorized.privyUserId,
+      expiry: authorized.expiration,
+      appId: authorized.appId,
+      issuedAt: authorized.issuedAt,
+    })
     tokenData = authorized
-    console.log("tokenData postwritter", tokenData)
-
   }
 
   const body = await watchData(requestObject)
