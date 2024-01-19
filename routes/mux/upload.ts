@@ -15,7 +15,6 @@ type HTTPMethod =
   | 'TRACE'
 
 export default defineEventHandler(async (event) => {
-
   const corsOptions = {
     methods: ['POST', 'OPTIONS'] as HTTPMethod[],
     allowHeaders: [
@@ -41,30 +40,23 @@ export default defineEventHandler(async (event) => {
   }
 
   const storage = useStorage('redis')
-  const { cid } = await readBody(event)
+  const cid = await readBody(event)
 
-  let inStorage = await storage.hasItem(authToken)
-  let tokenData
-
-  // this logic could be better. we should check if its expired, if so revalidate etc.
-  if (!inStorage) {
-    const authorized = await checkPrivy(authToken);
-    if (!authorized || authorized.appId !== process.env.PRIVY_APP_ID || Date.now() > authorized.expiration) {
-      // Re-validate the token
-      const revalidatedToken = await checkPrivy(authToken);
-      if (!revalidatedToken) {
-        return { error: 'Token revalidation failed' };
-      }
-      tokenData = revalidatedToken;
+  let tokenData = await storage.getItem(authToken)
+  if (!tokenData) {
+    const verifiedClaims = await checkPrivy(authToken)
+    if (!verifiedClaims || verifiedClaims.appId !== process.env.PRIVY_APP_ID) {
+      console.error('Invalid authentication token')
+      return { error: 'Invalid authentication token' }
     }
+
     await storage.setItem(authToken, {
-      userId: authorized.privyUserId,
-      expiry: authorized.expiration,
-      appId: authorized.appId,
-      issuedAt: authorized.issuedAt,
+      userId: verifiedClaims.privyUserId,
+      expiry: verifiedClaims.expiration,
     })
-    tokenData = authorized
+    tokenData = verifiedClaims
   }
+
   const assetEndpointForMux = `https://${cid}.ipfs.w3s.link`
 
   try {
@@ -73,7 +65,6 @@ export default defineEventHandler(async (event) => {
       playback_policy: 'public',
       encoding_tier: 'baseline',
     })
-
     return { id: asset.id, playbackId: asset.playback_ids?.[0].id }
   } catch (e) {
     console.error('Error creating Mux asset', e)

@@ -3,7 +3,8 @@ import { privyClient } from './privyClient'
 
 export async function checkPrivy(authToken: string) {
   try {
-    const verifiedClaims: AuthTokenClaims = await privyClient.verifyAuthToken(authToken)
+    const verifiedClaims: AuthTokenClaims =
+      await privyClient.verifyAuthToken(authToken)
     return {
       appId: verifiedClaims.appId,
       issuer: verifiedClaims.issuer,

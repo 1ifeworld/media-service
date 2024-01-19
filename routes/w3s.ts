@@ -47,14 +47,18 @@ export default defineEventHandler(async (event) => {
 
   // this logic could be better. we should check if its expired, if so revalidate etc.
   if (!inStorage) {
-    const authorized = await checkPrivy(authToken);
-    if (!authorized || authorized.appId !== process.env.PRIVY_APP_ID || Date.now() > authorized.expiration) {
+    const authorized = await checkPrivy(authToken)
+    if (
+      !authorized ||
+      authorized.appId !== process.env.PRIVY_APP_ID ||
+      Date.now() > authorized.expiration
+    ) {
       // Re-validate the token
-      const revalidatedToken = await checkPrivy(authToken);
+      const revalidatedToken = await checkPrivy(authToken)
       if (!revalidatedToken) {
-        return { error: 'Token revalidation failed' };
+        return { error: 'Token revalidation failed' }
       }
-      tokenData = revalidatedToken;
+      tokenData = revalidatedToken
     }
     await storage.setItem(authToken, {
       userId: authorized.privyUserId,
@@ -71,7 +75,6 @@ export default defineEventHandler(async (event) => {
   const files = await filesFromPaths([filePath])
   const cid = await client.uploadFile(files[0])
 
-  console.log(`https://${cid?.toString()}.ipfs.w3s.link`)
   return { cid: cid?.toString() }
 })
 
