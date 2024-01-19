@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
   let authToken = requestObject.headers['authorization']
 
   if (Array.isArray(authToken)) {
-    authToken = authToken[0] // Take the first token if there are multiple
+    authToken = authToken[0] 
   }
 
   authToken = authToken?.split(' ')[1]
@@ -45,7 +45,6 @@ export default defineEventHandler(async (event) => {
   let inStorage = await storage.hasItem(authToken)
   let tokenData
 
-  // this logic could be better. we should check if its expired, if so revalidate etc.
   if (!inStorage) {
     const authorized = await checkPrivy(authToken)
     if (
