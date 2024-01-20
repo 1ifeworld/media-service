@@ -17,6 +17,7 @@ export default eventHandler(async (event) => {
     if (Array.isArray(authTokenHeader)) {
       authTokenHeader = authTokenHeader[0]
     }
+    // Removes 'Bearer'
     const authToken = authTokenHeader?.split(' ')[1]
 
     if (!authToken) {
