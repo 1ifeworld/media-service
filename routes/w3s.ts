@@ -47,6 +47,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const verifiedClaims = await checkPrivy(authToken)
+  
   console.log("VER CLAIMS", verifiedClaims)
 
   console.log("APP ID", verifiedClaims.appId)
