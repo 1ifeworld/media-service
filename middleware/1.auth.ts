@@ -22,8 +22,8 @@ export default eventHandler(async (event) => {
     authTokenHeader = authTokenHeader[0]
   }
   const authToken = authTokenHeader?.split(' ')[1]
-  console.log("AUTHTOKEN", authToken
-  )
+  console.log("AUTHTOKEN", authToken)
+
   if (!authToken) {
     throw new Error('No authentication token provided')
   }
@@ -33,6 +33,7 @@ export default eventHandler(async (event) => {
     throw new Error('Invalid authentication token')
   }
   console.log("TOKEN", tokenData)
+  
   return tokenData
 }
 

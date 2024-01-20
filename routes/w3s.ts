@@ -76,6 +76,9 @@ export default defineEventHandler(async (event) => {
   }
 assertMethod(event, 'POST')
 
+console.log("W3S INNIT")
+
+
 
   // const tokenData = event.context.authTokenData
   // if (!tokenData) {
@@ -90,6 +93,8 @@ assertMethod(event, 'POST')
   const filePath = body.file[0].filepath
   const files = await filesFromPaths([filePath])
   const cid = await client.uploadFile(files[0])
+
+  console.log (" CID " , cid)
 
   return { cid: cid?.toString() }
 })

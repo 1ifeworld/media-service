@@ -15,6 +15,7 @@ type HTTPMethod =
   | 'TRACE'
 
   export default defineEventHandler(async (event) => {
+    console.log("PRE UPLOAD")
     const corsOptions = {
       methods: ['POST', 'OPTIONS'] as HTTPMethod[],
       allowHeaders: [
@@ -26,18 +27,22 @@ type HTTPMethod =
     }
 
     useCORS(event, corsOptions)
+    console.log(" POST CORS MUXI" )
 
-    const tokenData = event.context.authTokenData
-    if (!tokenData) {
-      console.error('No token data available from middleware')
-      return { error: 'Authentication failed' }
-    }
+    // const tokenData = event.context.authTokenData
+    // if (!tokenData) {
+    //   console.error('No token data available from middleware')
+    //   return { error: 'Authentication failed' }
+    // }
 
-    console.log('Authenticated App ID:', tokenData.appId)
+    // console.log('Authenticated App ID:', tokenData.appId)
 
     const cid = await readBody(event)
 
+
     const assetEndpointForMux = `https://${cid}.ipfs.w3s.link`
+
+    console.log("MUX ASSET", assetEndpointForMux)
 
     try {
       const asset = await Video.Assets.create({
