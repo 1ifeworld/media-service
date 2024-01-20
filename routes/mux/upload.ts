@@ -17,41 +17,43 @@ type HTTPMethod =
 export default defineEventHandler(async (event) => {
   console.log('PRE UPLOAD')
 
-  if (isPreflightRequest) {
-    const corsOptions = {
-      methods: ['POST', 'OPTIONS'] as HTTPMethod[],
-      allowHeaders: [
-        'Authorization',
-        'Content-Type',
-        'Access-Control-Allow-Origin',
-      ],
-      preflight: { statusCode: 204 },
-    }
-    useCORS(event, corsOptions)
+  // Define CORS options
+  const corsOptions = {
+    methods: ['POST', 'OPTIONS'] as HTTPMethod[],
+    allowHeaders: [
+      'Authorization',
+      'Content-Type',
+      'Access-Control-Allow-Origin',
+    ],
+    preflight: { statusCode: 204 },
   }
 
-  console.log(' POST CORS MUXI')
+  // Apply CORS to the request
+  useCORS(event, corsOptions)
 
+  // Handle preflight (OPTIONS) request
+  if (event.node.req.method === 'OPTIONS') {
+    // End the response for OPTIONS request
+    return { statusCode: 204 }
+  }
+
+  // Ensure this is a POST request
+  if (event.node.req.method !== 'POST') {
+    return { error: 'Method not allowed', statusCode: 405 }
+  }
+
+  // Now handle POST request
   const tokenData = event.context.authTokenData
-  console.log('TOKEN DATA MUX', tokenData)
 
   if (!tokenData) {
     console.error('No token data available from middleware')
     return { error: 'Authentication failed' }
   }
 
-  // const tokenData = event.context.authTokenData
-  // if (!tokenData) {
-  //   console.error('No token data available from middleware')
-  //   return { error: 'Authentication failed' }
-  // }
-
-  // console.log('Authenticated App ID:', tokenData.appId)
+  console.log('TOKEN DATA MUX', tokenData)
 
   const cid = await readBody(event)
-
   const assetEndpointForMux = `https://${cid}.ipfs.w3s.link`
-
   console.log('MUX ASSET', assetEndpointForMux)
 
   try {

@@ -69,38 +69,18 @@ async function parseProof(data) {
 // })
 
 export default defineEventHandler(async (event) => {
-  console.log('W3S')
-
   const tokenData = event.context.authTokenData
-  console.log(tokenData)
 
   if (!tokenData) {
     console.error('No token data available from middleware')
     return { error: 'Authentication failed' }
   }
 
-  //   if (event.node.req.method === 'OPTIONS') {
-  //     return null
-  //   }
-  // assertMethod(event, 'POST')
-
-  console.log('W3S INNIT')
-
-  // const tokenData = event.context.authTokenData
-  // if (!tokenData) {
-  //   console.error('No token data available from middleware')
-  //   return { error: 'Authentication failed' }
-  // }
-
-  // console.log('Authenticated App ID:', tokenData.appId)
-
   const body = await watchData(event.node.req)
   // @ts-ignore
   const filePath = body.file[0].filepath
   const files = await filesFromPaths([filePath])
   const cid = await client.uploadFile(files[0])
-
-  console.log(' CID ', cid)
 
   return { cid: cid?.toString() }
 })
