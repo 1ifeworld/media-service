@@ -69,10 +69,6 @@ async function parseProof(data) {
 // })
 
 export default defineEventHandler(async (event) => {
-  if (event.node.req.method === 'OPTIONS') {
-    return null
-  }
-  assertMethod(event, 'POST')
 
   // Middleware should have already validated the token
   // Retrieve token data from middleware (adjust as needed based on your middleware's implementation)

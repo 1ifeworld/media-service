@@ -3,10 +3,14 @@
 import { checkPrivy } from '../utils/checkPrivy'
 
 export default eventHandler(async (event) => {
-    if (event.node.req.method === 'OPTIONS') {
-        return null
-      }
-      assertMethod(event, 'POST')
+
+    if (getRequestURL(event).pathname.startsWith('/w3s')) {
+        if (event.node.req.method === 'OPTIONS') {
+            return null
+          }
+    assertMethod(event, 'POST')
+
+
 
   const requestObject = event.node.req
 
@@ -27,4 +31,4 @@ export default eventHandler(async (event) => {
   return tokenData
 }
 
-)
+})
