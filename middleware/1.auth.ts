@@ -5,7 +5,7 @@ import { checkPrivy } from '../utils/checkPrivy'
 export default eventHandler(async (event) => {
     console.log("PREPING")
 
-    if (getRequestURL(event).pathname.startsWith('/')) {
+    if (getRequestURL(event).pathname.startsWith('/w3s')) {
         console.log("PREFLIGHT")
 
         if (event.node.req.method === 'OPTIONS') {
