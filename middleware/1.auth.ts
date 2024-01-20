@@ -33,8 +33,8 @@ export default eventHandler(async (event) => {
     throw new Error('Invalid authentication token')
   }
   console.log("TOKEN", tokenData)
-  
-  return tokenData
+
+  event.context.authTokenData = tokenData
 }
 
 })

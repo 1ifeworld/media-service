@@ -71,6 +71,12 @@ async function parseProof(data) {
 export default defineEventHandler(async (event) => {
   console.log("W3S")
 
+  const tokenData = event.context.authTokenData;
+  if (!tokenData) {
+    console.error('No token data available from middleware');
+    return { error: 'Authentication failed' };
+  }
+
 //   if (event.node.req.method === 'OPTIONS') {
 //     return null
 //   }

@@ -29,6 +29,12 @@ type HTTPMethod =
     useCORS(event, corsOptions)
     console.log(" POST CORS MUXI" )
 
+    const tokenData = event.context.authTokenData;
+    if (!tokenData) {
+      console.error('No token data available from middleware');
+      return { error: 'Authentication failed' };
+    }
+
     // const tokenData = event.context.authTokenData
     // if (!tokenData) {
     //   console.error('No token data available from middleware')
