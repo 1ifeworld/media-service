@@ -1,5 +1,3 @@
-// in middleware folder. not working causing CORS issues
-
 import { checkPrivy } from '../utils/checkPrivy'
 
 export default eventHandler(async (event) => {
