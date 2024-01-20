@@ -27,8 +27,6 @@ type HTTPMethod =
 
     useCORS(event, corsOptions)
 
-    // Middleware should have already validated the token
-    // Retrieve token data from middleware (adjust as needed based on your middleware's implementation)
     const tokenData = event.context.authTokenData
     if (!tokenData) {
       console.error('No token data available from middleware')

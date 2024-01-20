@@ -70,6 +70,11 @@ async function parseProof(data) {
 
 export default defineEventHandler(async (event) => {
 
+  if (event.node.req.method === 'OPTIONS') {
+    return null
+  }
+assertMethod(event, 'POST')
+
   const tokenData = event.context.authTokenData
   if (!tokenData) {
     console.error('No token data available from middleware')
