@@ -11,6 +11,9 @@ dependencies:
   '@mux/mux-node':
     specifier: ^7.3.5
     version: 7.3.5
+  '@privy-io/server-auth':
+    specifier: ^1.6.1
+    version: 1.6.1
   '@ucanto/core':
     specifier: ^9.0.1
     version: 9.0.1
@@ -29,6 +32,9 @@ dependencies:
   formidable:
     specifier: ^3.5.1
     version: 3.5.1
+  nitro-cors:
+    specifier: ^0.7.0
+    version: 0.7.0
   nitropack:
     specifier: latest
     version: 2.8.1
@@ -622,6 +628,7 @@ packages:
     dependencies:
       is-glob: 4.0.3
       micromatch: 4.0.5
+      napi-wasm: 1.1.0
     dev: false
     bundledDependencies:
       - napi-wasm
@@ -681,6 +688,17 @@ packages:
     dependencies:
       '@multiformats/murmur3': 2.1.8
       murmurhash3js-revisited: 3.0.0
+    dev: false
+
+  /@privy-io/server-auth@1.6.1:
+    resolution: {integrity: sha512-H+PKsHdAryur+7yK7jqRG3viNwiKLJ5gBkJJLE+y5VgPTsfbDwSVrqjOn86Ppj7x8CfXSeL1FV9X9U161KQ+jQ==}
+    dependencies:
+      dotenv: 16.3.1
+      jose: 4.15.4
+      node-fetch-native: 1.6.1
+      redaxios: 0.5.1
+      ts-case-convert: 2.0.7
+      type-fest: 3.13.1
     dev: false
 
   /@protobufjs/aspromise@1.1.2:
@@ -2345,6 +2363,10 @@ packages:
     hasBin: true
     dev: false
 
+  /jose@4.15.4:
+    resolution: {integrity: sha512-W+oqK4H+r5sITxfxpSU+MMdr/YSWGvgZMQDIsNoBDGGy4i7GBPTtvFKibQzW06n3U3TqHjhvBJsirShsEJ6eeQ==}
+    dev: false
+
   /js-yaml@4.1.0:
     resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
     hasBin: true
@@ -2663,12 +2685,23 @@ packages:
     hasBin: true
     dev: false
 
+  /napi-wasm@1.1.0:
+    resolution: {integrity: sha512-lHwIAJbmLSjF9VDRm9GoVOy9AGp3aIvkjv+Kvz9h16QR3uSVYH78PNQUnT2U4X53mhlnV2M7wrhibQ3GHicDmg==}
+    dev: false
+
   /native-fetch@3.0.0(node-fetch@2.7.0):
     resolution: {integrity: sha512-G3Z7vx0IFb/FQ4JxvtqGABsOTIqRWvgQz6e+erkB+JJD6LrszQtMozEHI4EkmgZQvnGHrpLVzUWk7t4sJCIkVw==}
     peerDependencies:
       node-fetch: '*'
     dependencies:
       node-fetch: 2.7.0
+    dev: false
+
+  /nitro-cors@0.7.0:
+    resolution: {integrity: sha512-Mbb26M7TCKZxt8mOw5V9mVj4gCCv+/+LOy1QUUlk+HcMFn5CD4/irwg8IsoDg7NA+c441A0joC4n+mVFCNhu5g==}
+    dependencies:
+      h3: 1.10.0
+      ufo: 1.3.2
     dev: false
 
   /nitropack@2.8.1:
@@ -3085,6 +3118,10 @@ packages:
       picomatch: 2.3.1
     dev: false
 
+  /redaxios@0.5.1:
+    resolution: {integrity: sha512-FSD2AmfdbkYwl7KDExYQlVvIrFz6Yd83pGfaGjBzM9F6rpq8g652Q4Yq5QD4c+nf4g2AgeElv1y+8ajUPiOYMg==}
+    dev: false
+
   /redis-errors@1.2.0:
     resolution: {integrity: sha512-1qny3OExCf0UvUV/5wpYKf2YwPcOqXzkwKKSmKHiE6ZMQs5heeE/c8eXK+PNllPvmjgAbfnsbpkGZWy8cBpn9w==}
     engines: {node: '>=4'}
@@ -3453,6 +3490,10 @@ packages:
 
   /tr46@0.0.3:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
+    dev: false
+
+  /ts-case-convert@2.0.7:
+    resolution: {integrity: sha512-Kqj8wrkuduWsKUOUNRczrkdHCDt4ZNNd6HKjVw42EnMIGHQUABS4pqfy0acETVLwUTppc1fzo/yi11+uMTaqzw==}
     dev: false
 
   /type-fest@2.19.0:

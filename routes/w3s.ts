@@ -7,7 +7,7 @@ import { formidable } from 'formidable'
 import { filesFromPaths } from 'files-from-path'
 
 let client: Client
-;(async () => {
+(async () => {
   const principal = parse(process.env.KEY)
   client = await create({ principal, store: new StoreMemory() })
   const proof = await parseProof(process.env.PROOF)
@@ -26,18 +26,11 @@ async function parseProof(data) {
 }
 
 export default defineEventHandler(async (event) => {
-  const requestObject = event.node.req
-
-  const body = await watchData(requestObject)
-
+  const body = await watchData(event.node.req)
   // @ts-ignore
   const filePath = body.file[0].filepath
-
   const files = await filesFromPaths([filePath])
-
   const cid = await client.uploadFile(files[0])
-
-  console.log(`https://${cid?.toString()}.ipfs.w3s.link`)
 
   return { cid: cid?.toString() }
 })
