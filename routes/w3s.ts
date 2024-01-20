@@ -40,13 +40,15 @@ export default defineEventHandler(async (event) => {
   console.log("AUTH[0]", authToken)
 
   authToken = authToken?.split(' ')[1]
+  console.log("AUTH SPLIT", authToken
+  )
   if (!authToken) {
     return { error: 'No authentication token provided' }
   }
 
   const verifiedClaims = await checkPrivy(authToken)
   console.log("VER CLAIMS", verifiedClaims)
-  
+
   console.log("APP ID", verifiedClaims.appId)
   if (!verifiedClaims || verifiedClaims.appId !== process.env.PRIVY_APP_ID) {
     console.error('Invalid authentication token')
