@@ -69,22 +69,21 @@ async function parseProof(data) {
 // })
 
 export default defineEventHandler(async (event) => {
-  console.log("W3S")
+  console.log('W3S')
 
-  const tokenData = event.context.authTokenData;
+  const tokenData = event.context.authTokenData
+
   if (!tokenData) {
-    console.error('No token data available from middleware');
-    return { error: 'Authentication failed' };
+    console.error('No token data available from middleware')
+    return { error: 'Authentication failed' }
   }
 
-//   if (event.node.req.method === 'OPTIONS') {
-//     return null
-//   }
-// assertMethod(event, 'POST')
+  //   if (event.node.req.method === 'OPTIONS') {
+  //     return null
+  //   }
+  // assertMethod(event, 'POST')
 
-console.log("W3S INNIT")
-
-
+  console.log('W3S INNIT')
 
   // const tokenData = event.context.authTokenData
   // if (!tokenData) {
@@ -100,7 +99,7 @@ console.log("W3S INNIT")
   const files = await filesFromPaths([filePath])
   const cid = await client.uploadFile(files[0])
 
-  console.log (" CID " , cid)
+  console.log(' CID ', cid)
 
   return { cid: cid?.toString() }
 })
