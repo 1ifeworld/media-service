@@ -19,8 +19,7 @@
     "files-from-path": "^1.0.4",
     "formidable": "^3.5.1",
     "nitro-cors": "^0.7.0",
-    "nitropack": "latest",
-    "unstorage": "^1.10.1"
+    "nitropack": "latest"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.5.2"
