@@ -72,6 +72,7 @@ export default defineEventHandler(async (event) => {
   console.log('W3S')
 
   const tokenData = event.context.authTokenData
+  console.log(tokenData)
 
   if (!tokenData) {
     console.error('No token data available from middleware')
