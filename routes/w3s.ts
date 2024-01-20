@@ -26,6 +26,11 @@ async function parseProof(data) {
 }
 
 export default defineEventHandler(async (event) => {
+  if (event.node.req.method === 'OPTIONS') {
+    return null
+  }
+  assertMethod(event, 'POST')
+  
   const requestObject = event.node.req
 
   // Extract and validate the authToken
