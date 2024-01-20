@@ -3,13 +3,31 @@ import { useCORS } from 'nitro-cors'
 
 const { Video } = new Mux()
 
+type HTTPMethod =
+  | 'GET'
+  | 'HEAD'
+  | 'PATCH'
+  | 'POST'
+  | 'PUT'
+  | 'DELETE'
+  | 'CONNECT'
+  | 'OPTIONS'
+  | 'TRACE'
 
 export default defineEventHandler(async (event) => {
-  if (event.node.req.method === 'OPTIONS') {
-    return null
+  const corsOptions = {
+    methods: ['POST', 'OPTIONS'] as HTTPMethod[],
+    allowHeaders: [
+      'Authorization',
+      'Content-Type',
+      'Access-Control-Allow-Origin',
+    ],
+    preflight: { statusCode: 204 },
   }
-  assertMethod(event, 'POST')
- const requestObject = event.node.req
+
+  useCORS(event, corsOptions)
+
+  const requestObject = event.node.req
 
   let authTokenHeader = requestObject.headers['authorization']
   if (Array.isArray(authTokenHeader)) {
@@ -20,12 +38,23 @@ export default defineEventHandler(async (event) => {
   if (!authToken) {
     return { error: 'No authentication token provided' }
   }
+
+  const storage = useStorage('redis')
   const cid = await readBody(event)
 
-  const verifiedClaims = await checkPrivy(authToken)
-  if (!verifiedClaims || verifiedClaims.appId !== process.env.PRIVY_APP_ID) {
-    console.error('Invalid authentication token')
-    return { error: 'Invalid authentication token' }
+  let tokenData = await storage.getItem(authToken)
+  if (!tokenData) {
+    const verifiedClaims = await checkPrivy(authToken)
+    if (!verifiedClaims || verifiedClaims.appId !== process.env.PRIVY_APP_ID) {
+      console.error('Invalid authentication token')
+      return { error: 'Invalid authentication token' }
+    }
+
+    await storage.setItem(authToken, {
+      userId: verifiedClaims.privyUserId,
+      expiry: verifiedClaims.expiration,
+    })
+    tokenData = verifiedClaims
   }
 
   const assetEndpointForMux = `https://${cid}.ipfs.w3s.link`
