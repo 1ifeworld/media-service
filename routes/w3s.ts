@@ -26,13 +26,6 @@ async function parseProof(data) {
 }
 
 export default defineEventHandler(async (event) => {
-  const tokenData = event.context.authTokenData
-
-  if (!tokenData) {
-    console.error('No token data available from middleware')
-    return { error: 'Authentication failed' }
-  }
-
   const body = await watchData(event.node.req)
   // @ts-ignore
   const filePath = body.file[0].filepath

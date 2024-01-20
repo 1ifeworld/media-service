@@ -15,7 +15,6 @@ type HTTPMethod =
   | 'TRACE'
 
 export default defineEventHandler(async (event) => {
-  console.log('PRE UPLOAD')
 
   // Define CORS options
   const corsOptions = {
@@ -41,16 +40,6 @@ export default defineEventHandler(async (event) => {
   if (event.node.req.method !== 'POST') {
     return { error: 'Method not allowed', statusCode: 405 }
   }
-
-  // Now handle POST request
-  const tokenData = event.context.authTokenData
-
-  if (!tokenData) {
-    console.error('No token data available from middleware')
-    return { error: 'Authentication failed' }
-  }
-
-  console.log('TOKEN DATA MUX', tokenData)
 
   const cid = await readBody(event)
   const assetEndpointForMux = `https://${cid}.ipfs.w3s.link`

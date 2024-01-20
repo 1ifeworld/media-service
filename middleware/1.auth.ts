@@ -1,6 +1,6 @@
 import { checkPrivy } from '../utils/checkPrivy'
 
-export default eventHandler(async (event) => {
+export default defineEventHandler(async (event) => {
   const path = getRequestURL(event).pathname
 
   // Handle OPTIONS requests for /w3s separately
