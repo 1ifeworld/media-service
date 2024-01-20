@@ -5,7 +5,11 @@ const { Video } = new Mux()
 
 
 export default defineEventHandler(async (event) => {
-  const requestObject = event.node.req
+  if (event.node.req.method === 'OPTIONS') {
+    return null
+  }
+  assertMethod(event, 'POST')
+ const requestObject = event.node.req
 
   let authTokenHeader = requestObject.headers['authorization']
   if (Array.isArray(authTokenHeader)) {
