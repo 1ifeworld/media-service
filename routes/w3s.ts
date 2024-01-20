@@ -25,49 +25,6 @@ async function parseProof(data) {
   return importDAG(blocks)
 }
 
-// export default defineEventHandler(async (event) => {
-//   if (event.node.req.method === 'OPTIONS') {
-//     return null
-//   }
-//   assertMethod(event, 'POST')
-//   const requestObject = event.node.req
-
-//   // Extract and validate the authToken
-//   let authToken = requestObject.headers['authorization']
-
-//   console.log('AUTH', authToken)
-
-//   if (Array.isArray(authToken)) {
-//     authToken = authToken[0]
-//   }
-
-//   console.log('AUTH[0]', authToken)
-
-//   authToken = authToken?.split(' ')[1]
-//   console.log('AUTH SPLIT', authToken)
-//   if (!authToken) {
-//     return { error: 'No authentication token provided' }
-//   }
-
-//   const verifiedClaims = await checkPrivy(authToken)
-
-//   console.log('VER CLAIMS', verifiedClaims)
-
-//   console.log('APP ID', verifiedClaims.appId)
-//   if (!verifiedClaims || verifiedClaims.appId !== process.env.PRIVY_APP_ID) {
-//     console.error('Invalid authentication token')
-//     return { error: 'Invalid authentication token' }
-//   }
-
-//   const body = await watchData(requestObject)
-//   // @ts-ignore
-//   const filePath = body.file[0].filepath
-//   const files = await filesFromPaths([filePath])
-//   const cid = await client.uploadFile(files[0])
-
-//   return { cid: cid?.toString() }
-// })
-
 export default defineEventHandler(async (event) => {
   const tokenData = event.context.authTokenData
 
