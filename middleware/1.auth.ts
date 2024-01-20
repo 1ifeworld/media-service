@@ -3,15 +3,17 @@
 import { checkPrivy } from '../utils/checkPrivy'
 
 export default eventHandler(async (event) => {
+    console.log("PREPING")
 
-    // if (getRequestURL(event).pathname.startsWith('/')) {
-    //     if (event.node.req.method === 'OPTIONS') {
-    //         return null
-    //       }
-    // assertMethod(event, 'POST')
+    if (getRequestURL(event).pathname.startsWith('/')) {
+        console.log("PREFLIGHT")
 
+        if (event.node.req.method === 'OPTIONS') {
+            return null
+          }
+    assertMethod(event, 'POST')
 
-
+  console.log("POST AUTH")
   const requestObject = event.node.req
 
   let authTokenHeader = requestObject.headers['authorization']
@@ -34,4 +36,4 @@ export default eventHandler(async (event) => {
   return tokenData
 }
 
-)
+})

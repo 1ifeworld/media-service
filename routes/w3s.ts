@@ -76,13 +76,14 @@ export default defineEventHandler(async (event) => {
   }
 assertMethod(event, 'POST')
 
-  const tokenData = event.context.authTokenData
-  if (!tokenData) {
-    console.error('No token data available from middleware')
-    return { error: 'Authentication failed' }
-  }
 
-  console.log('Authenticated App ID:', tokenData.appId)
+  // const tokenData = event.context.authTokenData
+  // if (!tokenData) {
+  //   console.error('No token data available from middleware')
+  //   return { error: 'Authentication failed' }
+  // }
+
+  // console.log('Authenticated App ID:', tokenData.appId)
 
   const body = await watchData(event.node.req)
   // @ts-ignore
