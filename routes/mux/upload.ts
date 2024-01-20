@@ -3,30 +3,8 @@ import { useCORS } from 'nitro-cors'
 
 const { Video } = new Mux()
 
-type HTTPMethod =
-  | 'GET'
-  | 'HEAD'
-  | 'PATCH'
-  | 'POST'
-  | 'PUT'
-  | 'DELETE'
-  | 'CONNECT'
-  | 'OPTIONS'
-  | 'TRACE'
 
 export default defineEventHandler(async (event) => {
-  const corsOptions = {
-    methods: ['POST', 'OPTIONS'] as HTTPMethod[],
-    allowHeaders: [
-      'Authorization',
-      'Content-Type',
-      'Access-Control-Allow-Origin',
-    ],
-    preflight: { statusCode: 204 },
-  }
-
-  useCORS(event, corsOptions)
-
   const requestObject = event.node.req
 
   let authTokenHeader = requestObject.headers['authorization']
