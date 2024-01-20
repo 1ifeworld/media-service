@@ -29,22 +29,22 @@ export default defineEventHandler(async (event) => {
 
   const requestObject = event.node.req
 
-  let authTokenHeader = requestObject.headers['authorization']
-  if (Array.isArray(authTokenHeader)) {
-    authTokenHeader = authTokenHeader[0]
-  }
+  // let authTokenHeader = requestObject.headers['authorization']
+  // if (Array.isArray(authTokenHeader)) {
+  //   authTokenHeader = authTokenHeader[0]
+  // }
 
-  const authToken = authTokenHeader?.split(' ')[1] // Extract token from "Bearer [token]"
-  if (!authToken) {
-    return { error: 'No authentication token provided' }
-  }
+  // const authToken = authTokenHeader?.split(' ')[1] // Extract token from "Bearer [token]"
+  // if (!authToken) {
+  //   return { error: 'No authentication token provided' }
+  // }
   const cid = await readBody(event)
 
-  const verifiedClaims = await checkPrivy(authToken)
-  if (!verifiedClaims || verifiedClaims.appId !== process.env.PRIVY_APP_ID) {
-    console.error('Invalid authentication token')
-    return { error: 'Invalid authentication token' }
-  }
+  // const verifiedClaims = await checkPrivy(authToken)
+  // if (!verifiedClaims || verifiedClaims.appId !== process.env.PRIVY_APP_ID) {
+  //   console.error('Invalid authentication token')
+  //   return { error: 'Invalid authentication token' }
+  // }
 
   const assetEndpointForMux = `https://${cid}.ipfs.w3s.link`
 
