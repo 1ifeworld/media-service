@@ -71,10 +71,10 @@ async function parseProof(data) {
 export default defineEventHandler(async (event) => {
   console.log("W3S")
 
-  if (event.node.req.method === 'OPTIONS') {
-    return null
-  }
-assertMethod(event, 'POST')
+//   if (event.node.req.method === 'OPTIONS') {
+//     return null
+//   }
+// assertMethod(event, 'POST')
 
 console.log("W3S INNIT")
 
