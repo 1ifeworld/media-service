@@ -16,6 +16,9 @@ type HTTPMethod =
 
   export default defineEventHandler(async (event) => {
     console.log("PRE UPLOAD")
+
+    if (isPreflightRequest) {
+
     const corsOptions = {
       methods: ['POST', 'OPTIONS'] as HTTPMethod[],
       allowHeaders: [
@@ -25,11 +28,17 @@ type HTTPMethod =
       ],
       preflight: { statusCode: 204 },
     }
-
     useCORS(event, corsOptions)
+  }
+
+  
+
+
     console.log(" POST CORS MUXI" )
 
-    const tokenData = event.context.authTokenData;
+    const tokenData = event.context.authTokenData
+    console.log("TOKEN DATA MUX", tokenData)
+
     if (!tokenData) {
       console.error('No token data available from middleware');
       return { error: 'Authentication failed' };
