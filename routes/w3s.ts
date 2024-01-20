@@ -69,6 +69,7 @@ async function parseProof(data) {
 // })
 
 export default defineEventHandler(async (event) => {
+  console.log("W3S")
 
   if (event.node.req.method === 'OPTIONS') {
     return null
