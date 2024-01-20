@@ -14,52 +14,45 @@ type HTTPMethod =
   | 'OPTIONS'
   | 'TRACE'
 
-export default defineEventHandler(async (event) => {
-  const corsOptions = {
-    methods: ['POST', 'OPTIONS'] as HTTPMethod[],
-    allowHeaders: [
-      'Authorization',
-      'Content-Type',
-      'Access-Control-Allow-Origin',
-    ],
-    preflight: { statusCode: 204 },
-  }
+  export default defineEventHandler(async (event) => {
+    const corsOptions = {
+      methods: ['POST', 'OPTIONS'] as HTTPMethod[],
+      allowHeaders: [
+        'Authorization',
+        'Content-Type',
+        'Access-Control-Allow-Origin',
+      ],
+      preflight: { statusCode: 204 },
+    }
 
-  useCORS(event, corsOptions)
+    useCORS(event, corsOptions)
 
-  const requestObject = event.node.req
+    // Middleware should have already validated the token
+    // Retrieve token data from middleware (adjust as needed based on your middleware's implementation)
+    const tokenData = event.context.authTokenData
+    if (!tokenData) {
+      console.error('No token data available from middleware')
+      return { error: 'Authentication failed' }
+    }
 
-  let authTokenHeader = requestObject.headers['authorization']
-  if (Array.isArray(authTokenHeader)) {
-    authTokenHeader = authTokenHeader[0]
-  }
+    console.log('Authenticated App ID:', tokenData.appId)
 
-  const authToken = authTokenHeader?.split(' ')[1] // Extract token from "Bearer [token]"
-  if (!authToken) {
-    return { error: 'No authentication token provided' }
-  }
-  const cid = await readBody(event)
+    const cid = await readBody(event)
 
-  const verifiedClaims = await checkPrivy(authToken)
-  if (!verifiedClaims || verifiedClaims.appId !== process.env.PRIVY_APP_ID) {
-    console.error('Invalid authentication token')
-    return { error: 'Invalid authentication token' }
-  }
+    const assetEndpointForMux = `https://${cid}.ipfs.w3s.link`
 
-  const assetEndpointForMux = `https://${cid}.ipfs.w3s.link`
-
-  try {
-    const asset = await Video.Assets.create({
-      input: assetEndpointForMux,
-      playback_policy: 'public',
-      encoding_tier: 'baseline',
-    })
-    return { id: asset.id, playbackId: asset.playback_ids?.[0].id }
-  } catch (e) {
-    console.error('Error creating Mux asset', e)
-    return { error: 'Error creating Mux asset' }
-  }
-})
+    try {
+      const asset = await Video.Assets.create({
+        input: assetEndpointForMux,
+        playback_policy: 'public',
+        encoding_tier: 'baseline',
+      })
+      return { id: asset.id, playbackId: asset.playback_ids?.[0].id }
+    } catch (e) {
+      console.error('Error creating Mux asset', e)
+      return { error: 'Error creating Mux asset' }
+    }
+  })
 
 // const directUpload = await Video.Uploads.create({
 //   cors_origin: '*',
