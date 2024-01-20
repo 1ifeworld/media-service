@@ -28,7 +28,5 @@ export default defineEventHandler(async (event) => {
     if (!tokenData || tokenData.appId !== process.env.PRIVY_APP_ID) {
       throw new Error('Invalid authentication token')
     }
-
-    event.context.authTokenData = tokenData
   }
 })
