@@ -16,19 +16,19 @@ type HTTPMethod =
 
 export default defineEventHandler(async (event) => {
 
-  // // Define CORS options
-  // const corsOptions = {
-  //   methods: ['POST', 'OPTIONS'] as HTTPMethod[],
-  //   allowHeaders: [
-  //     'Authorization',
-  //     'Content-Type',
-  //     'Access-Control-Allow-Origin',
-  //   ],
-  //   preflight: { statusCode: 204 },
-  // }
+  // Define CORS options
+  const corsOptions = {
+    methods: ['POST', 'OPTIONS'] as HTTPMethod[],
+    allowHeaders: [
+      'Authorization',
+      'Content-Type',
+      'Access-Control-Allow-Origin',
+    ],
+    preflight: { statusCode: 204 },
+  }
 
-  // // Apply CORS to the request
-  // useCORS(event, corsOptions)
+  // Apply CORS to the request
+  useCORS(event, corsOptions)
 
   // Handle preflight (OPTIONS) request
   if (event.node.req.method === 'OPTIONS') {
