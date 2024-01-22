@@ -18,8 +18,13 @@
     "@web3-storage/w3up-client": "^12.0.0",
     "files-from-path": "^1.0.4",
     "formidable": "^3.5.1",
+    "itty-router": "^4.0.27",
+    "kysely": "^0.27.2",
     "nitro-cors": "^0.7.0",
-    "nitropack": "latest"
+    "nitropack": "latest",
+    "pg": "^8.11.3",
+    "pg-pool": "^3.6.1",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.5.2"

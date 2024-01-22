@@ -15,7 +15,6 @@ type HTTPMethod =
   | 'TRACE'
 
 export default defineEventHandler(async (event) => {
-
   // Define CORS options
   const corsOptions = {
     methods: ['POST', 'OPTIONS'] as HTTPMethod[],

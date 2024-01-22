@@ -1,5 +1,5 @@
 import { AuthTokenClaims } from '@privy-io/server-auth'
-import { privyClient } from './privyClient'
+import { privyClient } from './client/privyClient'
 
 export async function checkPrivy(authToken: string) {
   try {
