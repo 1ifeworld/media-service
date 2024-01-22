@@ -7,6 +7,7 @@ import { set } from '../../utils/functions/set'
 
 
 export default defineEventHandler(async (event) => {
+  console.log("setname")
   const body = event.node.req
   const safeParse = ZodName.safeParse(body)
 

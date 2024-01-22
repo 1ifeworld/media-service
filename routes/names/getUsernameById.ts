@@ -4,6 +4,7 @@ import zod from 'zod';
 import { parseNameFromDb } from '../../utils/utils'
 
 export default defineEventHandler(async (event) => {
+  console.log("getusername by id got hit")
   const schema = zod.object({
     id: zod.string(),
   });

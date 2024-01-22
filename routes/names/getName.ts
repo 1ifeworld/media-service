@@ -2,6 +2,7 @@ import zod from 'zod'
 import { get } from '../../utils/functions/get'
 
 export default defineEventHandler(async (event) => {
+  console.log("getName")
   const schema = zod.object({
     name: zod.string().regex(/^[a-z0-9-.]+$/),
   })

@@ -3,6 +3,7 @@ import { getIdByOwner } from '../../utils/functions/id'
 
 
 export default defineEventHandler(async (event) => {
+  console.log("get ID")
   const schema = zod.object({
     owner: zod.string(),
   })
