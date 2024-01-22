@@ -6,6 +6,7 @@ export default defineEventHandler(async (event) => {
   const schema = zod.object({
     name: zod.string().regex(/^[a-z0-9-.]+$/),
   })
+
   const safeParse = schema.safeParse(event)
 
   if (!safeParse.success) {

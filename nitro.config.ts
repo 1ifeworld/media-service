@@ -11,5 +11,12 @@ export default defineNitroConfig({
         'access-control-allow-origin': '*',
       },
     },
+    '/names': {
+      headers: {
+        'access-control-allow-methods': 'POST, OPTIONS',
+        'access-control-allow-headers': '*',
+        'access-control-allow-origin': '*',
+      },
+    },
   },
 })
