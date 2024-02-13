@@ -29,34 +29,45 @@ async function parseProof(data) {
 
 export default defineEventHandler(async (event) => {
   try {
-  const body = await watchData(event.node.req)
+    const body = await watchData(event.node.req)
 
-  let cid: AnyLink | undefined
+    let cid: AnyLink | undefined
 
-  // @ts-expect-error
-  if (body.file) {
     // @ts-expect-error
-    const filePath = body.file[0].filepath
-    const files = await filesFromPaths([filePath])
-    cid = await client.uploadFile(files[0])
-  } else {
-    cid = await client.uploadFile(
-      new Blob([JSON.stringify(body)], { type: 'application/json' }),
-    )
+    if (body.file) {
+      // @ts-expect-error
+      const filePath = body.file[0].filepath
+      const files = await filesFromPaths([filePath])
+      cid = await client.uploadFile(files[0])
+    } else {
+      cid = await client.uploadFile(
+        new Blob([JSON.stringify(body)], { type: 'application/json' }),
+      )
+    }
+    if (!cid) {
+      console.error('Upload to Web3 Storage failed: CID is undefined')
+      throw new Error('Upload to Web3 Storage failed.')
+    }
+
+    console.log(`https://${cid}.ipfs.w3s.link`)
+    return new Response(JSON.stringify({ cid: cid.toString() }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    })
+  } catch (error) {
+    console.error('Error handling request:', error.message)
+
+    if (error.message.includes('File size limit exceeded')) {
+      return new Response(JSON.stringify({ error: error.message }), {
+        status: 413, // Payload Too Large
+        headers: { 'Content-Type': 'application/json' }
+      })
+    }
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    })
   }
-
-  if (!cid) {
-    console.error('Upload to Web3 Storage failed: CID is undefined');
-    throw new Error('Upload to Web3 Storage failed.');
-  }
-
-  console.log(`https://${cid}.ipfs.w3s.link`)
-
-  return { cid: cid?.toString() }
-} catch (error) {
-  console.error('Error handling request:', error.message);
-  return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: { 'Content-Type': 'application/json' } });
-}
 })
 
 function watchData(req) {
@@ -68,7 +79,7 @@ function watchData(req) {
     form.parse(req, (error, fields, files) => {
       if (error) {
         if (error.message.includes('maxFileSize exceeded')) {
-          console.error('File size limit exceeded:', error.message);
+          console.error('File size limit exceeded:', error.message)
           reject(new Error('File size limit exceeded. Max size is 200MB.'))
         } else {
           console.error('Form parsing failed:', error.message)
