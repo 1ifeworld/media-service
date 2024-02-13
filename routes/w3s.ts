@@ -61,11 +61,19 @@ export default defineEventHandler(async (event) => {
 
 function watchData(req) {
   return new Promise((resolve, reject) => {
-    const form = formidable({ multiples: true })
+    const form = formidable({
+      multiples: true,
+      maxFileSize: 200 * 1024 * 1024,
+    })
     form.parse(req, (error, fields, files) => {
       if (error) {
-        console.error('Form parsing failed:', error.message)
-        reject(new Error('Failed to process form data.'))
+        if (error.message.includes('maxFileSize exceeded')) {
+          console.error('File size limit exceeded:', error.message);
+          reject(new Error('File size limit exceeded. Max size is 200MB.'))
+        } else {
+          console.error('Form parsing failed:', error.message)
+          reject(new Error('Failed to process form data.'))
+        }
         return
       }
       const nonArrayFields = {}
