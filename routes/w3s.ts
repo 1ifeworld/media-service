@@ -28,6 +28,7 @@ async function parseProof(data) {
 }
 
 export default defineEventHandler(async (event) => {
+  try {
   const body = await watchData(event.node.req)
 
   let cid: AnyLink | undefined
@@ -45,12 +46,17 @@ export default defineEventHandler(async (event) => {
   }
 
   if (!cid) {
-    return { error: 'Upload to w3s failed' }
+    console.error('Upload to Web3 Storage failed: CID is undefined');
+    throw new Error('Upload to Web3 Storage failed.');
   }
 
   console.log(`https://${cid}.ipfs.w3s.link`)
 
   return { cid: cid?.toString() }
+} catch (error) {
+  console.error('Error handling request:', error.message);
+  return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+}
 })
 
 function watchData(req) {
@@ -58,10 +64,10 @@ function watchData(req) {
     const form = formidable({ multiples: true })
     form.parse(req, (error, fields, files) => {
       if (error) {
-        reject(error)
+        console.error('Form parsing failed:', error.message)
+        reject(new Error('Failed to process form data.'))
         return
       }
-      // Ensure that each field value is not an array
       const nonArrayFields = {}
       for (const key in fields) {
         nonArrayFields[key] = Array.isArray(fields[key])
