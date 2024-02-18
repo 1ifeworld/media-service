@@ -28,40 +28,65 @@ async function parseProof(data) {
 }
 
 export default defineEventHandler(async (event) => {
-  const body = await watchData(event.node.req)
+  try {
+    const body = await watchData(event.node.req)
 
-  let cid: AnyLink | undefined
+    let cid: AnyLink | undefined
 
-  // @ts-expect-error
-  if (body.file) {
     // @ts-expect-error
-    const filePath = body.file[0].filepath
-    const files = await filesFromPaths([filePath])
-    cid = await client.uploadFile(files[0])
-  } else {
-    cid = await client.uploadFile(
-      new Blob([JSON.stringify(body)], { type: 'application/json' }),
-    )
+    if (body.file) {
+      // @ts-expect-error
+      const filePath = body.file[0].filepath
+      const files = await filesFromPaths([filePath])
+      cid = await client.uploadFile(files[0])
+    } else {
+      cid = await client.uploadFile(
+        new Blob([JSON.stringify(body)], { type: 'application/json' }),
+      )
+    }
+    if (!cid) {
+      console.error('Upload to Web3 Storage failed: CID is undefined')
+      throw new Error('Upload to Web3 Storage failed.')
+    }
+
+    console.log(`https://${cid}.ipfs.w3s.link`)
+    return new Response(JSON.stringify({ cid: cid.toString() }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    })
+  } catch (error) {
+    console.error('Error handling request:', error.message)
+
+    if (error.message.includes('File size limit exceeded')) {
+      return new Response(JSON.stringify({ error: error.message }), {
+        status: 413, // Payload Too Large
+        headers: { 'Content-Type': 'application/json' }
+      })
+    }
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    })
   }
-
-  if (!cid) {
-    return { error: 'Upload to w3s failed' }
-  }
-
-  console.log(`https://${cid}.ipfs.w3s.link`)
-
-  return { cid: cid?.toString() }
 })
 
 function watchData(req) {
   return new Promise((resolve, reject) => {
-    const form = formidable({ multiples: true })
+    const form = formidable({
+      multiples: true,
+      maxFileSize: 200 * 1024 * 1024,
+    })
     form.parse(req, (error, fields, files) => {
       if (error) {
-        reject(error)
+        if (error.message.includes('maxFileSize exceeded')) {
+          console.error('File size limit exceeded:', error.message)
+          reject(new Error('File size limit exceeded. Max size is 200MB.'))
+        } else {
+          console.error('Form parsing failed:', error.message)
+          reject(new Error('Failed to process form data.'))
+        }
         return
       }
-      // Ensure that each field value is not an array
       const nonArrayFields = {}
       for (const key in fields) {
         nonArrayFields[key] = Array.isArray(fields[key])

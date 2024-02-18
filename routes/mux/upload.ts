@@ -31,13 +31,18 @@ export default defineEventHandler(async (event) => {
     })
 
     return { id: asset.id, playbackId: asset.playback_ids?.[0].id }
-  } catch (e) {
-    console.error('Error creating Mux asset', e)
-    return createError({ statusCode: 500, statusMessage: 'Error creating Mux asset' })
-  }}
-})
+  }  catch (e) {
+    console.error('Error creating Mux asset:', e.message, 'Details:', e.details || 'None')
+    return createError({
+      statusCode: 500,
+      statusMessage: 'Error creating Mux asset',
+      details: e.details || 'An unexpected error occurred',
+    })
+  }
 
-function createError({ statusCode, statusMessage }) {
-  console.log(`Sending error response: ${statusCode}`)
-  return { error: statusMessage, statusCode: statusCode }
-}
+  function createError({ statusCode, statusMessage, details }) {
+    console.log(`Sending error response: ${statusCode}, Details: ${details}`)
+    return { error: statusMessage, details: details, statusCode: statusCode }
+   }
+  }
+})
