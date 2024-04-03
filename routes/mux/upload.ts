@@ -30,7 +30,22 @@ export default defineEventHandler(async (event) => {
       encoding_tier: 'baseline',
     })
 
-    return { id: asset.id, playbackId: asset.playback_ids?.[0].id }
+      let processing = true
+
+      const checkAssetStatus = async (assetId) => {
+        const assetDetails = await Video.Assets.get(assetId)
+        if (assetDetails.status === 'ready' || assetDetails.status === 'errored') {
+          processing = false
+          return assetDetails.status
+        } else {
+          await new Promise(resolve => setTimeout(resolve, 5000)) // 5 seconds delay
+          return checkAssetStatus(assetId)
+        }
+      }
+
+      const finalStatus = await checkAssetStatus(asset.id)
+
+      return { id: asset.id, playbackId: asset.playback_ids?.[0].id, processing, status: finalStatus }
   }  catch (e) {
     console.error('Error creating Mux asset:', e.message, 'Details:', e.details || 'None')
     return createError({
